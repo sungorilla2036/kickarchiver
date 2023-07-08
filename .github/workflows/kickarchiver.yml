@@ -36,13 +36,13 @@ jobs:
 
       - name: Upload Cached VOD
         id: upload
-        if: steps.restore-cache.outputs.cache-hit == 'true' && (hashFiles('*.mp4') != '' || hashFiles('*.mkv') != '')
+        if: steps.restore-cache.outputs.cache-hit == 'true' && (hashFiles('*.mp4') != '' || hashFiles('*.mkv') != '' || hashFiles('*.ts') != '')
         env:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
           bucketname: infrared-vods
         run: |
-          file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv");
+          file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv -or -type f -name "*.ts");
           fileName=${file:2}
           fileNameEncoded=$(python -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))"  "$fileName")
           echo $fileNameEncoded
@@ -88,4 +88,4 @@ jobs:
           XDG_DATA_HOME: ${{ github.workspace }}
         if: steps.upload.outcome == 'skipped'
         continue-on-error: true
-        run: timeout 5.75h streamlink hlsvariant://file://./master.m3u8 best --hls-live-restart --output "{time:%Y%m%d_}.mp4"
+        run: timeout 5.75h streamlink hlsvariant://file://./master.m3u8 best --hls-live-restart --output "{time:%Y%m%d_}.ts"
