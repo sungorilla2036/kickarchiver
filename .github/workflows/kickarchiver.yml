@@ -42,7 +42,7 @@ jobs:
           secret: ${{secrets.SECRET}}
           bucketname: infrared-vods
         run: |
-          file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv -or -type f -name "*.ts");
+          file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv" -or -type f -name "*.ts");
           fileName=${file:2}
           fileNameEncoded=$(python -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))"  "$fileName")
           echo $fileNameEncoded
