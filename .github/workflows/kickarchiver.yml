@@ -88,4 +88,4 @@ jobs:
           XDG_DATA_HOME: ${{ github.workspace }}
         if: steps.upload.outcome == 'skipped'
         continue-on-error: true
-        run: timeout 5.75h streamlink hlsvariant://file://./master.m3u8 best --hls-live-restart --output "{time:%Y%m%d_}.ts"
+        run: timeout 5.9h streamlink hlsvariant://file://./master.m3u8 best --hls-live-restart --output "{time:%Y%m%d_%H%M%S}.ts"
