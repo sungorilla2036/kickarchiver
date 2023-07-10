@@ -17,6 +17,6 @@ else:
     print(response_json_str)
     playback_url = response_json_obj['data']['playback_url']
     datestr = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = datestr + ' - ' + response_json_obj['data']['slug'] + ' [' + response_json_obj['data']['id'] + '].ts'
+    file_name = datestr + ' - ' + response_json_obj['data']['slug'] + ' [' + str(response_json_obj['data']['id']) + '].ts'
     timeout_sec = 60 * 60 * 3
     subprocess.call(['streamlink', playback_url, 'best', '-o', file_name], timeout=timeout_sec)
