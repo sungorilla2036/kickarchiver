@@ -4,9 +4,6 @@ name: Upload cached VOD
 
 # Controls when the workflow will run
 on:
-  push:
-    paths:
-      - "**.m3u8"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
