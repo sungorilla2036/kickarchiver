@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Download And Archive Kick Livestream VOD
+name: Upload cached VOD
 
 # Controls when the workflow will run
 on:
@@ -33,26 +33,9 @@ jobs:
           # An explicit key for restoring and saving the cache
           key: stream-vod
 
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-          cache: "pip" # caching pip dependencies
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Download livestream
-        env:
-          XDG_DATA_HOME: ${{ github.workspace }}
-        continue-on-error: true
-        run: python download.py
-
-      - name: Upload to archive
-        continue-on-error: true
+      - name: Upload Cached VOD
+        id: upload
+        if: steps.restore-cache.outputs.cache-hit == 'true' && (hashFiles('*.mp4') != '' || hashFiles('*.mkv') != '' || hashFiles('*.ts') != '')
         env:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
@@ -63,3 +46,23 @@ jobs:
           fileNameEncoded=$(python -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))"  "$fileName")
           echo $fileNameEncoded
           curl -g --location --header 'x-archive-queue-derive:0' --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
+
+      - name: Clear cache
+        if: steps.upload.outcome == 'success'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("About to clear")
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              console.log(cache)
+              await github.rest.actions.deleteActionsCacheById({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                cache_id: cache.id,
+              })
+            }
+            console.log("Clear completed")
