@@ -3,8 +3,8 @@ from curl_cffi import requests
 import json
 from datetime import datetime
 
-channel_info = "https://kick.com/api/v1/channels/realvyok"
-live_link_check = "https://kick.com/api/v2/channels/realvyok/livestream"
+channel_info = "https://kick.com/api/v1/channels/infrared"
+live_link_check = "https://kick.com/api/v2/channels/infrared/livestream"
 
 
 response = requests.get(live_link_check,  impersonate="chrome101")
