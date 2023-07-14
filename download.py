@@ -29,7 +29,7 @@ else:
         exit()
     playback_url = response_json_obj['data']['playback_url']
     datestr = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = datestr + ' - ' + response_json_obj['data']['slug'] + ' [' + str(response_json_obj['data']['id']) + '].ts'
+    file_name = datestr + ' - ' + response_json_obj['data']['slug'] + ' [' + str(response_json_obj['data']['id']) + '].mp4'
     subprocess.call(['streamlink', playback_url, 'best', '-o', file_name], timeout=max_record_time + 60)
 
     current_time = datetime.now()
