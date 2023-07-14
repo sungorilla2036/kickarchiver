@@ -15,21 +15,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Cache For Downloaded Livestream
-        id: restore-cache
-        uses: actions/cache@v3.0.8
-        with:
-          # A list of files, directories, and wildcard patterns to cache and restore
-          path: |
-            *.mp4
-            **/*.mp4
-            *.mkv
-            **/*.mkv
-            *.ts
-            **/*.ts
-          # An explicit key for restoring and saving the cache
-          key: stream-vod
-
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -43,26 +28,32 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Download livestream
+        id: download-livestream
         env:
           XDG_DATA_HOME: ${{ github.workspace }}
-        continue-on-error: true
-        run: python download.py
-
-      - name: Upload to archive
-        id: upload-to-archive
-        continue-on-error: true
-        env:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
           bucketname: infrared-vods
-        run: |
-          file=$(find -type f -name "*.mp4" -or -type f -name "*.mkv" -or -type f -name "*.ts");
-          fileName=${file:2}
-          fileNameEncoded=$(python -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))"  "$fileName")
-          echo $fileNameEncoded
-          curl -g --location --header 'x-archive-queue-derive:0' --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
+        continue-on-error: true
+        run: python download.py
 
       - name: Delete Uploaded Files
-        if: steps.upload-to-archive.outcome == 'success'
+        if: steps.download-livestream.outcome == 'success'
         run: |
           find -type f -name "*.mp4" -or -type f -name "*.mkv" -or -type f -name "*.ts" -delete
+
+      - name: Cache For Downloaded Livestream
+        id: cache
+        if: always()
+        uses: actions/cache/save@v3
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: |
+            *.mp4
+            **/*.mp4
+            *.mkv
+            **/*.mkv
+            *.ts
+            **/*.ts
+          # An explicit key for restoring and saving the cache
+          key: stream-vod
