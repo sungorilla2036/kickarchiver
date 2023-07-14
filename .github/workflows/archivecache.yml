@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Cache For Downloaded Livestream
         id: restore-cache
-        uses: actions/cache@v3.0.8
+        uses: actions/cache/restore@v3
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
           path: |
