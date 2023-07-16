@@ -3,6 +3,7 @@ from curl_cffi import requests
 import json
 from datetime import datetime
 import os
+import urllib.parse
 
 job_start_time = datetime.now()
 channel_info = "https://kick.com/api/v1/channels/infrared"
@@ -40,6 +41,7 @@ else:
     accesskey = os.environ['accesskey']
     secret = os.environ['secret']
     bucketname = os.environ['bucketname']
+    file_name = urllib.parse.quote(file_name)
     # Upload to archive.org
     # curl -g --location --header 'x-archive-queue-derive:0' --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
     subprocess.call([
