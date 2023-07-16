@@ -42,4 +42,17 @@ else:
     bucketname = os.environ['bucketname']
     # Upload to archive.org
     # curl -g --location --header 'x-archive-queue-derive:0' --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
-    subprocess.call(['curl', '-g', '--location', '--header', 'x-archive-queue-derive:0', '--header', 'x-amz-auto-make-bucket:1', '--header', f'"authorization: LOW {accesskey}:{secret}"', '--upload-file', file_name, f"http://s3.us.archive.org/{bucketname}/{file_name}"], timeout=remaining_time)
+    subprocess.call([
+        'curl', 
+        '-g', 
+        '--location', 
+        '--header', 
+        'x-archive-queue-derive:0', 
+        '--header', 
+        'x-amz-auto-make-bucket:1', 
+        '--header', 
+        f"authorization: LOW {accesskey}:{secret}", 
+        '--upload-file', 
+        file_name, 
+        f"http://s3.us.archive.org/{bucketname}/{file_name}"
+        ], timeout=remaining_time)
