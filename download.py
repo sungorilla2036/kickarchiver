@@ -41,7 +41,6 @@ else:
     accesskey = os.environ['accesskey']
     secret = os.environ['secret']
     bucketname = os.environ['bucketname']
-    file_name = urllib.parse.quote(file_name)
     # Upload to archive.org
     # curl -g --location --header 'x-archive-queue-derive:0' --header 'x-amz-auto-make-bucket:1' --header "authorization: LOW $accesskey:$secret" --upload-file "$file" http://s3.us.archive.org/"$bucketname"/"$fileNameEncoded"
     subprocess.call([
@@ -56,5 +55,5 @@ else:
         f"authorization: LOW {accesskey}:{secret}", 
         '--upload-file', 
         file_name, 
-        f"http://s3.us.archive.org/{bucketname}/{file_name}"
+        f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(file_name)}"
         ], timeout=remaining_time)
