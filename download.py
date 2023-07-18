@@ -31,7 +31,11 @@ else:
     playback_url = response_json_obj['data']['playback_url']
     datestr = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = datestr + ' - ' + response_json_obj['data']['slug'] + ' [' + str(response_json_obj['data']['id']) + '].ts'
-    subprocess.call(['streamlink', playback_url, 'best', '-o', file_name], timeout=max_record_time + 60)
+
+    try:
+        subprocess.call(['streamlink', playback_url, 'best', '-o', file_name], timeout=max_record_time + 60)
+    except subprocess.TimeoutExpired:
+        print("Max recording time reached")
 
     current_time = datetime.now()
     job_duration = current_time - job_start_time
