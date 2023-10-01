@@ -65,6 +65,18 @@ else:
     remaining_time = max_job_duration - job_duration.total_seconds()
     
     bucketname = os.environ['S3_BUCKET_NAME']
+    # Clear secondary archive
+    # aws s3 rm s3://"$bucketname" --recursive
+    subprocess.call([
+        'aws', 
+        's3', 
+        'rm',  
+        f"s3://{bucketname}"
+        '--recursive'
+        ], timeout=remaining_time)
+    
+    job_duration = datetime.now() - job_start_time
+    remaining_time = max_job_duration - job_duration.total_seconds()
     # Upload to secondary archive
     # aws s3 cp "$file" s3://"$bucketname"
     subprocess.call([
