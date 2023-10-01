@@ -34,6 +34,9 @@ jobs:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
           bucketname: infrared-vods
+          accesskey2: ${{secrets.ACCESS_KEY2}}
+          secret2: ${{secrets.SECRET2}}
+          bucketurl: ${{secrets.S3_ARCHIVE_URL}}
         continue-on-error: true
         run: python download.py
 
