@@ -34,9 +34,10 @@ jobs:
           accesskey: ${{secrets.ACCESS_KEY}}
           secret: ${{secrets.SECRET}}
           bucketname: infrared-vods
-          accesskey2: ${{secrets.ACCESS_KEY2}}
-          secret2: ${{secrets.SECRET2}}
-          bucketurl: ${{secrets.S3_ARCHIVE_URL}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_ENDPOINT_URL: ${{secrets.AWS_ENDPOINT_URL}}
+          S3_BUCKET_NAME: ${{secrets.S3_BUCKET_NAME}}
         continue-on-error: true
         run: python download.py
 
