@@ -37,9 +37,8 @@ else:
     except subprocess.TimeoutExpired:
         print("Max recording time reached")
 
-    current_time = datetime.now()
-    job_duration = current_time - job_start_time
     max_job_duration = 60 * 60 * 5.5
+    job_duration = datetime.now() - job_start_time
     remaining_time = max_job_duration - job_duration.total_seconds()
 
     accesskey = os.environ['accesskey']
@@ -62,18 +61,16 @@ else:
         f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(file_name)}"
         ], timeout=remaining_time)
 
-    accesskey = os.environ['accesskey2']
-    secret = os.environ['secret2']
-    bucketurl = os.environ['bucketurl']
+    job_duration = datetime.now() - job_start_time
+    remaining_time = max_job_duration - job_duration.total_seconds()
+    
+    bucketname = os.environ['S3_BUCKET_NAME']
     # Upload to secondary archive
-    # curl -g --location --header "authorization: LOW $accesskey:$secret" --upload-file "$file" "$bucketurl"/"$fileNameEncoded"
+    # aws s3 cp "$file" s3://"$bucketname"
     subprocess.call([
-        'curl', 
-        '-g', 
-        '--location', 
-        '--header', 
-        f"authorization: LOW {accesskey}:{secret}", 
-        '--upload-file', 
+        'aws', 
+        's3', 
+        'cp', 
         file_name, 
-        f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(file_name)}"
+        f"s3://{bucketname}"
         ], timeout=remaining_time)
