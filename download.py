@@ -61,3 +61,19 @@ else:
         file_name, 
         f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(file_name)}"
         ], timeout=remaining_time)
+
+    accesskey = os.environ['accesskey2']
+    secret = os.environ['secret2']
+    bucketurl = os.environ['bucketurl']
+    # Upload to secondary archive
+    # curl -g --location --header "authorization: LOW $accesskey:$secret" --upload-file "$file" "$bucketurl"/"$fileNameEncoded"
+    subprocess.call([
+        'curl', 
+        '-g', 
+        '--location', 
+        '--header', 
+        f"authorization: LOW {accesskey}:{secret}", 
+        '--upload-file', 
+        file_name, 
+        f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(file_name)}"
+        ], timeout=remaining_time)
