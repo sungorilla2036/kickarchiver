@@ -22,9 +22,9 @@ else:
     current_time_utc = datetime.utcnow()
     stream_duration = current_time_utc - stream_start
     print("Stream has been live for " + str(stream_duration))
-    max_record_time = 60 * 60 * 3
+    max_record_time = 60 * 60 * 2.75
     script_run_interval = 60 * 5
-    # This script is triggered once every 5 minutes but we only need to record once every 3 hours
+    # This script is triggered once every 5 minutes but we only need to record once every 2.75 hours
     if (stream_duration.total_seconds() % max_record_time > script_run_interval ):
         print("Job already running")
         exit()
