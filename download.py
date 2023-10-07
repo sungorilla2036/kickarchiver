@@ -71,7 +71,7 @@ else:
         'aws', 
         's3', 
         'rm',  
-        f"s3://{bucketname}"
+        f"s3://{bucketname}",
         '--recursive'
         ], timeout=remaining_time)
     
