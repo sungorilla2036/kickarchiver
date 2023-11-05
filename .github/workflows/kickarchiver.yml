@@ -25,10 +25,7 @@ jobs:
           cache: "pip" # caching pip dependencies
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libsndfile1 ffmpeg
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Download livestream
         id: download-livestream
