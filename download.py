@@ -36,8 +36,7 @@ else:
         subprocess.call(['streamlink', playback_url, 'best', '-o', file_name], timeout=max_record_time + 60)
     except subprocess.TimeoutExpired:
         print("Max recording time reached")
-    mp4_file_name = file_name[:-2] + 'mp4'
-    subprocess.call(['ffmpeg', '-i', file_name, '-c:v', 'copy', '-c:a', 'copy', mp4_file_name])
+
     max_job_duration = 60 * 60 * 5.5
     job_duration = datetime.now() - job_start_time
     remaining_time = max_job_duration - job_duration.total_seconds()
@@ -58,8 +57,8 @@ else:
         '--header', 
         f"authorization: LOW {accesskey}:{secret}", 
         '--upload-file', 
-        mp4_file_name, 
-        f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(mp4_file_name)}"
+        file_name, 
+        f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(file_name)}"
         ], timeout=remaining_time)
 
     job_duration = datetime.now() - job_start_time
@@ -84,6 +83,6 @@ else:
         'aws', 
         's3', 
         'cp', 
-        mp4_file_name, 
+        file_name, 
         f"s3://{bucketname}"
         ], timeout=remaining_time)
