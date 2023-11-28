@@ -61,20 +61,7 @@ else:
         f"http://s3.us.archive.org/{bucketname}/{urllib.parse.quote(file_name)}"
         ], timeout=remaining_time)
 
-    job_duration = datetime.now() - job_start_time
-    remaining_time = max_job_duration - job_duration.total_seconds()
-    
     bucketname = os.environ['S3_BUCKET_NAME']
-    # Clear secondary archive
-    # aws s3 rm s3://"$bucketname" --recursive
-    subprocess.call([
-        'aws', 
-        's3', 
-        'rm',  
-        f"s3://{bucketname}",
-        '--recursive'
-        ], timeout=remaining_time)
-    
     job_duration = datetime.now() - job_start_time
     remaining_time = max_job_duration - job_duration.total_seconds()
     # Upload to secondary archive
@@ -85,4 +72,15 @@ else:
         'cp', 
         file_name, 
         f"s3://{bucketname}"
+        ], timeout=remaining_time)
+
+    # Upload to transfer.sh
+    # curl --upload-file ./hello.txt https://transfer.sh/hello.txt
+    job_duration = datetime.now() - job_start_time
+    remaining_time = max_job_duration - job_duration.total_seconds()
+    subprocess.call([
+        'curl', 
+        '--upload-file', 
+        file_name,  
+        f"https://transfer.sh/{urllib.parse.quote(file_name)}"
         ], timeout=remaining_time)
