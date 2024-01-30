@@ -10,7 +10,7 @@ channel_info = "https://kick.com/api/v1/channels/infrared"
 live_link_check = "https://kick.com/api/v2/channels/infrared/livestream"
 
 
-response = requests.get(live_link_check,  impersonate="chrome101")
+response = requests.get(live_link_check,  impersonate="chrome120")
 response_json_str = json.dumps(response.json(), indent=4)
 response_json_obj = json.loads(response_json_str)
 
